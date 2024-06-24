@@ -53,16 +53,6 @@ fn parse_token(input: &mut &str) -> PResult<Token> {
     }
     .parse_next(input)
 }
-
-impl IntoIterator for Ast {
-    type Item = Token;
-    type IntoIter = <Vec<Token> as IntoIterator>::IntoIter;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.root.into_iter()
-    }
-}
-
 impl Deref for Ast {
     type Target = [Token];
     fn deref(&self) -> &Self::Target {
