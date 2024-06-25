@@ -3,7 +3,7 @@ use std::{
     str::FromStr,
 };
 use winnow::{
-    combinator::{dispatch, empty, fail, opt, preceded, repeat, terminated},
+    combinator::{dispatch, empty, fail, preceded, repeat, terminated},
     token::{any, none_of, take_until},
     PResult, Parser,
 };
@@ -36,8 +36,11 @@ impl FromStr for Ast {
     }
 }
 
+fn junk_parser(input: &mut &str) -> PResult<()> {
+    repeat::<_, _, (), _, _>(0.., none_of(VALID_TOKENS)).parse_next(input)
+}
 fn parse_bf(input: &mut &str) -> PResult<Vec<Token>> {
-    repeat(0.., preceded(opt(none_of(VALID_TOKENS)), parse_token)).parse_next(input)
+    terminated(repeat(0.., preceded(junk_parser, parse_token)), junk_parser).parse_next(input)
 }
 
 fn parse_token(input: &mut &str) -> PResult<Token> {
@@ -72,7 +75,7 @@ mod test {
     #[test]
     fn parse_example() {
         use Token::*;
-        let sample = "+,+ ->.<- [+-+],";
+        let sample = "junk     +,+  ->.<-  junk   [+-+],   junk";
 
         let expected = Ast {
             root: vec![
