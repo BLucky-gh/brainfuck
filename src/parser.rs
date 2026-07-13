@@ -21,8 +21,7 @@ fn parse_inner(input: &[u8]) -> (Vec<Token>, usize) {
     let len = input.len();
     let mut i = 0;
     while i < len {
-        let c = input[i];
-        match c {
+        match input[i] {
             b'>' => ast.push(Token::Next),
             b'<' => ast.push(Token::Prev),
             b'+' => ast.push(Token::Incr),

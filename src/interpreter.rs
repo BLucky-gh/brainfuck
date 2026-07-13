@@ -1,4 +1,4 @@
-use std::io::{BufRead, Read};
+use std::io::Read;
 
 use crate::parser::Token;
 
